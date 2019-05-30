@@ -1,0 +1,14 @@
+---
+  output: github_document
+---
+
+  ```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  out.width = "100%"
+)
+```
+# LeMaRns 0.1.0
+
+Initial release

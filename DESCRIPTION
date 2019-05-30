@@ -1,0 +1,41 @@
+Package: LeMaRns
+Title: Length-based Multispecies Analysis by Numerical Simulation
+Version: 0.1.0
+Date: 2019-06-01
+Authors@R: c(person("Michael A.", "Spence", email = "michael.spence@cefas.co.uk", role = c("aut", "cre")), person("Hayley J.", "Bannister", email = "hayley.bannister@cefas.co.uk", role = c("aut")), person("Johnathan E.", "Ball", email = "johnathan.ball@cefas.co.uk", role = c("aut")), person("Paul J.", "Dolder", email = "paul.dolder@cefas.co.uk", role = c("aut")), person("Robert B.", "Thorpe", email = "robert.thorpe@cefas.co.uk", role = c("aut")),person("Christopher A.", "Griffiths", email = "chris.griffiths@cefas.co.uk", role = c("ctb")))
+Description: An R package to set up, run and explore the outputs of the Length-based Multi-species model LeMans, focused on the marine environment.
+Depends: R (>= 3.5.0)
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
+LinkingTo: 
+    Rcpp, RcppArmadillo
+Imports: 
+    Rcpp, abind, methods
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Collate: 
+    'NS_par.R'
+    'RcppExports.R'
+    'calc_M1.R'
+    'calc_Q.R'
+    'calc_growth.R'
+    'calc_indicators.R'
+    'calc_mature.R'
+    'param_setup.R'
+    'run_LeMans.R'
+    'calc_output.R'
+    'calc_phi.R'
+    'calc_prefs.R'
+    'calc_ration_growthfac.R'
+    'calc_recruits.R'
+    'calc_suit_vect.R'
+    'get_Catch.R'
+    'get_SSB.R'
+    'get_indicators.R'
+    'other.R'
+    'plot_SSB.R'
+    'plot_indicators.R'

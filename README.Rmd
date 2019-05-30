@@ -1,0 +1,37 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# LeMaRns
+
+LeMaRns is an R package to set up, run and explore the outputs of the Length-based Multi-species model LeMans, focused on the marine environment.
+
+## Installation
+
+You can install the released version of LeMaRns from [CRAN](https://CRAN.R-project.org) with:
+
+``` r
+install.packages("LeMaRns")
+```
+
+## Example
+
+This is a basic example of how to set up, run and plot the resulting spawning-stock biomass:
+
+```{r example}
+library(LeMaRns)
+NS_params <- LeMansParam(NS_par, tau=NS_tau, eta=eta, L50=L50,other=1e12)
+effort <- matrix(0.25, 50, dim(NS_params @Qs)[3])
+model_run <- run_LeMans(NS_params, years=50, effort=effort)
+plot_SSB(NS_params,model_run)
+```
