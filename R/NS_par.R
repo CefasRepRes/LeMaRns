@@ -16,6 +16,12 @@
 #' @references Thorpe, R.B., Le Quesne, W.J.F., Luxford, F., Collie, J.S., Jennings, S. (2015). Evaluation and management implications of uncertainty in a multispecies size-structured model of population and community responses to fishing. \emph{Methods in Ecology and Evolution}, 6:49-58.
 "NS_par"
 
+#' Other food for the North Sea
+#'
+#' Other food for the North Sea dataset, \code{NS_par}.
+#'
+#' @format A numerical value representing other food. To be used with \code{NS_par}.
+"NS_other"
 
 #' North Sea interaction matrix
 #'
@@ -40,20 +46,20 @@
 #'  \item{\code{max_catchability}}{A numeric vector describing the maximum catchability for each catchability curve.}
 #' }
 #' @references Thorpe, R.B., Dolder, P.J. , Reeves, S., Robinson, P., Jennings, S. (2015). Assessing fishery and ecological consequences of alternative management options for multispecies fisheries \emph{ICES Journal of Marine Science}, 73(6):1503-1512.
-"mixed_fish"
+"NS_mixed_fish"
 
 #' The steepness of the slope of the catchability curve
 #'
-#' The steepness of the slope of the catchability curve associated with \code{mixed_fish}.
+#' The steepness of the slope of the catchability curve associated with \code{NS_mixed_fish}.
 #'
 #' @format A numeric value representing the steepness of the slope of the catchability curve.
 #' @references Thorpe, R.B., Dolder, P.J. , Reeves, S., Robinson, P., Jennings, S. (2015). Assessing fishery and ecological consequences of alternative management options for multispecies fisheries \emph{ICES Journal of Marine Science}, 73(6):1503-1512.
-"eta"
+"NS_eta"
 
 #' The length at 50\% of the maximum catchability of the catchability curve
 #'
-#' The length at 50\% of the maximum catchability of the catchability curve associated with \code{mixed_fish}.
+#' The length at 50\% of the maximum catchability of the catchability curve associated with \code{NS_mixed_fish}.
 #'
 #' @format A numeric value representing the length at 50\% of the maximum catchability of the catchability curve.
 #' @references Thorpe, R.B., Dolder, P.J. , Reeves, S., Robinson, P., Jennings, S. (2015). Assessing fishery and ecological consequences of alternative management options for multispecies fisheries \emph{ICES Journal of Marine Science}, 73(6):1503-1512.
-"L50"
+"NS_L50"

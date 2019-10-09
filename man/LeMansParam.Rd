@@ -96,7 +96,7 @@ LeMansParam(df, gdf, ...)
 
 \item{recruit_params}{A list object of length \code{nfish} specifying the parameters for the recruitment function.}
 
-\item{natmort_opt}{A character vector of length \code{1} describing the mortality function to be used for the species. This can take the value \code{"std_RNM"}, \code{"constant"} or \code{"linear"}. See \code{calc_M1} for more information.}
+\item{natmort_opt}{A character vector of length \code{1} describing the mortality function to be used for the species. The default value is \code{"std_RNM"} but can take a value of \code{"constant"} or \code{"linear"}. See \code{calc_M1} for more information.}
 
 \item{Nmort}{A numeric vector of length \code{nfish} representing the maximum background mortality of each species. The default is \code{0.8} for all species.}
 
@@ -141,11 +141,12 @@ k <- NS_par$k # the von-Bertalnaffy growth parameter.
 Lmat <- NS_par$Lmat # the length at which 50\% of individuals are mature (cm).
 
 NS_params <- LeMansParam(species_names=NS_par$species_names, Linf=Linf, k=k, W_a=W_a, W_b=W_b,
-Lmat=Lmat, tau=NS_tau, recruit_params=list(a=NS_par$a, b=NS_par$b), eta=rep(0.25, 21), L50=Lmat)
+Lmat=Lmat, tau=NS_tau, recruit_params=list(a=NS_par$a, b=NS_par$b), eta=rep(0.25, 21), L50=Lmat,
+other=NS_other)
 
 ###############################################
 # Alternatively:
-NS_params <- LeMansParam(NS_par, tau=NS_tau, eta=rep(0.25, 21), L50=NS_par$Lmat, other=1e12)
+NS_params <- LeMansParam(NS_par, tau=NS_tau, eta=rep(0.25, 21), L50=NS_par$Lmat, other=NS_other)
 }
 \seealso{
 \code{\link{run_LeMans}}, \code{\linkS4class{LeMans_param}}

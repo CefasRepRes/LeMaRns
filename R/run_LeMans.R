@@ -110,13 +110,13 @@ setClass("LeMans_outputs", slots=
 #' # Run the model
 #' model_run <- run_LeMans(N0=N0, tot_time=tot_time, Fs=Fs, nsc=nsc, nfish=nfish,
 #'                         phi_min=phi_min, mature=mature, sc_Linf=sc_Linf, wgt=wgt,
-#'                         phi=phi, ration=ration, other=1e12, M1=M1, suit_M2=suit_M2,
+#'                         phi=phi, ration=ration, other=NS_other, M1=M1, suit_M2=suit_M2,
 #'                         stored_rec_funs=stored_rec_funs, recruit_params=recruit_params,
 #'                         eps=1e-05)
 #'
 #' ##############################################
 #' # Alternatively:
-#' NS_params <- LeMansParam(NS_par,tau=NS_tau,eta=rep(0.25,21),L50=NS_par$Lmat,other=1e12)
+#' NS_params <- LeMansParam(NS_par,tau=NS_tau,eta=rep(0.25,21),L50=NS_par$Lmat,other=NS_other)
 #'
 #' # Define fishing effort
 #' effort <- matrix(0.5, 10, dim(NS_params@Qs)[3])
@@ -270,7 +270,7 @@ get_N0 <- function(nsc, nfish, mid, wgt, sc_Linf, intercept=1e10, slope=-5) {
 #' @seealso \linkS4class{LeMans_outputs}, \code{\link{run_LeMans}}
 #' @examples
 #' # Set up the inputs to the model
-#' NS_params <- LeMansParam(NS_par, tau=NS_tau, eta=rep(0.25, 21), L50=NS_par$Lmat, other=1e12)
+#' NS_params <- LeMansParam(NS_par, tau=NS_tau, eta=rep(0.25, 21), L50=NS_par$Lmat, other=NS_other)
 #'
 #' # Define fishing effort
 #' effort <- matrix(0.5, 10, dim(NS_params@Qs)[3])

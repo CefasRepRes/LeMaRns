@@ -1,9 +1,9 @@
 Package: LeMaRns
-Title: Length-based Multispecies Analysis by Numerical Simulation
-Version: 0.1.0
-Date: 2019-06-01
-Authors@R: c(person("Michael A.", "Spence", email = "michael.spence@cefas.co.uk", role = c("aut", "cre")), person("Hayley J.", "Bannister", email = "hayley.bannister@cefas.co.uk", role = c("aut")), person("Johnathan E.", "Ball", email = "johnathan.ball@cefas.co.uk", role = c("aut")), person("Paul J.", "Dolder", email = "paul.dolder@cefas.co.uk", role = c("aut")), person("Robert B.", "Thorpe", email = "robert.thorpe@cefas.co.uk", role = c("aut")),person("Christopher A.", "Griffiths", email = "chris.griffiths@cefas.co.uk", role = c("ctb")))
-Description: An R package to set up, run and explore the outputs of the Length-based Multi-species model LeMans, focused on the marine environment.
+Title: Length-Based Multispecies Analysis by Numerical Simulation
+Version: 0.1.1
+Date: 2019-10-01
+Authors@R: c(person("Michael A.", "Spence", email = "michael.spence@cefas.co.uk", role = c("aut", "cre"),comment = c(ORCID = "0000-0002-3445-7979")), person("Hayley J.", "Bannister", email = "hayley.bannister@cefas.co.uk", role = c("aut"),comment = c(ORCID = "0000-0002-2546-5168")), person("Johnathan E.", "Ball", email = "johnathan.ball@cefas.co.uk", role = c("aut")), person("Paul J.", "Dolder", email = "paul.dolder@cefas.co.uk", role = c("aut"),comment = c(ORCID = "0000-0002-4179-712X")), person("Robert B.", "Thorpe", email = "robert.thorpe@cefas.co.uk", role = c("aut"),comment = c(ORCID = "0000-0001-8193-6932")),person("Christopher A.", "Griffiths", email = "chris.griffiths@cefas.co.uk", role = c("ctb")))
+Description: Set up, run and explore the outputs of the Length-based Multi-species model (LeMans; Hall et al. 2006 <doi:10.1139/f06-039>), focused on the marine environment.
 Depends: R (>= 3.5.0)
 License: GPL-3
 Encoding: UTF-8

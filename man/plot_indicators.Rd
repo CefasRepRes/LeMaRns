@@ -43,7 +43,7 @@ plot_indicators(inputs, outputs, ...)
 
 \S4method{plot_indicators}{missing,missing}(wgt, mid, l_bound, u_bound,
   Linf, N, species, time_steps, species_names = NULL, prob, length_LFI,
-  MML, TyL, LFI, LQ, ...)
+  MML, TyL, LFI, LQ, units = "cm", ...)
 
 plot_LFI(inputs, outputs, ...)
 
@@ -57,7 +57,7 @@ plot_LFI(inputs, outputs, ...)
   species, time_steps, species_names, length_LFI, LFI, ...)
 
 \S4method{plot_LFI}{missing,missing}(wgt, l_bound, u_bound, N, species,
-  time_steps, species_names, length_LFI, LFI, ...)
+  time_steps, species_names, length_LFI, LFI, units = "cm", ...)
 
 plot_MML(inputs, outputs, ...)
 
@@ -71,7 +71,7 @@ plot_MML(inputs, outputs, ...)
   time_steps, species_names, MML, ...)
 
 \S4method{plot_MML}{missing,missing}(wgt, Linf, N, species, time_steps,
-  species_names, MML, ...)
+  species_names, MML, units = "cm", ...)
 
 plot_TyL(inputs, outputs, ...)
 
@@ -85,7 +85,7 @@ plot_TyL(inputs, outputs, ...)
   time_steps, species_names, TyL, ...)
 
 \S4method{plot_TyL}{missing,missing}(wgt, mid, N, species, time_steps,
-  species_names, TyL, ...)
+  species_names, TyL, units = "cm", ...)
 
 plot_LQ(inputs, outputs, ...)
 
@@ -99,7 +99,7 @@ plot_LQ(inputs, outputs, ...)
   time_steps, species_names, LQ, prob, ...)
 
 \S4method{plot_LQ}{missing,missing}(wgt, u_bound, N, species, time_steps,
-  species_names, LQ, prob, ...)
+  species_names, LQ, prob, units = "cm", ...)
 }
 \arguments{
 \item{inputs}{A \code{\linkS4class{LeMans_param}} object containing the parameter values of the current LeMans model.}
@@ -137,6 +137,8 @@ plot_LQ(inputs, outputs, ...)
 \item{LFI}{A numeric vector or matrix representing the outputs of the function \code{get_LFI()}. This option is only required if \code{inputs} and \code{outputs} are not provided.}
 
 \item{LQ}{A numeric vector or matrix representing the outputs of the function \code{get_LQ()}. This option is only required if \code{inputs} and \code{outputs} are not provided.}
+
+\item{units}{A character string denoting the units of length used in the model. The default is \code{"cm"}.}
 }
 \value{
 \code{plot_indicators} returns a set of four line plots depicting changes in the MML, LFI, TyL and LQ(s) of the community (including only the selected species) over time.

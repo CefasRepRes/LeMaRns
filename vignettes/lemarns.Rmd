@@ -4,7 +4,8 @@ subtitle: "Length-based Multispecies Analysis by Numerical Simulation in R"
 author: "Michael A. Spence, Hayley J. Bannister, Johnathan E. Ball and Robert B. Thorpe"
 date: "`r Sys.Date()`"
 output: 
-  rmarkdown::html_vignette:
+  rmarkdown::pdf_document:
+    #rmarkdown::html_vignette:
     fig_width: 7
     fig_height: 5
 vignette: >
@@ -228,6 +229,8 @@ NS_par
 
 `NS_tau` is the interaction matrix for the species in the model. Each row of the matrix represents a prey species and each column represents a predator species. If element `i,j` is equal to `1` it means that the `j`th species predates on the `i`th species.
 
+`NS_other` is other food for the North Sea.
+
 ## Setting the species-independent parameters
 
 The LeMans model is based on a discrete time discrete length system where there are $n_s$ species and $n_l$ length classes with the $l_j$ being the lower length of the $j$th length class and $l_{j+1}$ being the upper limit. The mid point of the $j$th length class is
@@ -322,7 +325,7 @@ mature <- calc_mature(Lmat, nfish, mid, kappa=rep(10, nfish), sc_Linf)
 
 In the LeMans model, fish may feed on each other and on other food (g), which is referred to in `LeMaRns` as `other`.
 ```{r}
-other <- 1e12
+other <- NS_other
 ```
 
 ### Recruitment
@@ -359,7 +362,7 @@ R_i = \min({\alpha_iS_i}, R_{max,i})
 \end{equation*}
 where $R_{max,i}$ is the maximum recruitment, or `constant` recruitment $R_i$. Below are examples of these recruitment functions:
 
-```{r, echo=FALSE, fig.height=6.5, fig.align="center"}
+```{r, echo=FALSE, fig.height=6.5,fig.width=7, fig.align="center"}
 x <- seq(1, 1e10, length.out=10000)
 SSB <- x/1e9 # SSB in tonnes x 10^3
 par(mfrow=c(2, 2))
@@ -386,7 +389,7 @@ In `LeMaRns`, there are three different options for background mortality functio
 
 Below gives examples of the different `M1` functions for a species with an $L_{\infty}$ of 125:
 
-```{r, echo=FALSE, fig.height=3, fig.align="center"}
+```{r, echo=FALSE, fig.height=3, fig.width=7, fig.align="center"}
 x <- seq(0, 125, 1)
 y <- ifelse(x<0.75*125, 0, 0.8)
 par(mfrow=c(1, 3))
@@ -498,7 +501,7 @@ NS_params <- new("LeMans_param",
                   wgt=wgt,
                   phi=phi,
                   ration=ration,
-                  other=1e12,
+                  other=other,
                   M1=M1,
                   suit_M2=suit_M2,
                   Qs=Qs,
@@ -516,11 +519,11 @@ NS_params <- LeMansParam(species_names=NS_par$species_names,
 ```
 the species parameters can be provided as a `data.frame` (referred to as `df`):
 ```{r, eval=FALSE}
-NS_params <- LeMansParam(NS_par, tau=NS_tau, eta=rep(0.25, 21), L50=NS_par$Lmat, other=1e12)
+NS_params <- LeMansParam(NS_par, tau=NS_tau, eta=rep(0.25, 21), L50=NS_par$Lmat, other=NS_other)
 ```
 and/or the gear types can be provided as a `data.frame` (referred to as `gdf`; see the gear examples below). As a minimum the species data frame must contain `Linf`, `k`, `W_a`, `W_b` and `Lmat`. It is also possible to include `species_names`, `kappa`, `rec_fun`, `natmort_opt`, `Nmort` and `prop`. Any additional variables are assumed to be recruitment parameters and a warning is shown to highlight this, i.e.
 ```{r, echo=FALSE}
-NS_params <- LeMansParam(NS_par, tau=NS_tau, eta=rep(0.25, 21), L50=NS_par$Lmat, other=1e12)
+NS_params <- LeMansParam(NS_par, tau=NS_tau, eta=rep(0.25, 21), L50=NS_par$Lmat, other=NS_other)
 ```
 
 # Running the model
@@ -533,7 +536,7 @@ N <- get_N0(nsc, nfish, mid, wgt, sc_Linf, intercept=1e10, slope=-5)
 ```
 In this function the total number of individuals in the community in each length class is equal to `intercept*mid^slope`. Within each length class, the number of individuals of each species is determined using the proportion of each species' biomass that is found in that length class. We can now plot the initial size spectrum of the model:
 
-```{r, echo=FALSE}
+```{r, echo=FALSE,fig.height=6.5,fig.width=7,fig.align="center"}
 N <- get_N0(nsc, nfish, mid, wgt, sc_Linf, intercept=1e10, slope=-5)
 par(mfrow=c(1,1), mar=c(5,5,5,0))
 layout(matrix(c(1,1,1,2,1,1,1,2,1,1,1,2), nrow=3, byrow=TRUE))
@@ -563,9 +566,9 @@ for (j in 1:length(effort)) {
 The model is run for many time steps, with the length of each time step being equal to `phi_min`. At each time step three processes occur: recruitment, mortality and growth.
 
 ### Recruitment
-In @thorpe2015 and @hall recruitment only occurs in the first time step of a new year. The number of individuals after the recruitment phase of the model $N'_{j,i}$ is thus defined as $N'_{j,i}=N_{j,i,t-1}$ for $j=2,\ldots,n_l$ and
+In @thorpe2015 and @hall recruitment only occurs in the first time step of a new year. The number of individuals after the recruitment phase of the model $N'_{j,i,t}$ is thus defined as $N'_{j,i,t}=N_{j,i,t-1}$ for $j=2,\ldots,n_l$ and
 \begin{equation*}
-N'_{1,i} = N_{1,i,t-1}+R_{i,t},
+N'_{1,i,t} = N_{1,i,t-1}+R_{i,t},
 \end{equation*}
 where $R_{i,t}$ is the number of recruits of species $i$ at time $t$. When the recruitment phase is implemented in `LeMaRns` the SSB is first calculated in grams and then the number of recruits is calculated:
 ```{r, eval=FALSE}
@@ -575,19 +578,19 @@ N[1, ] <- N[1,]+R
 ```
 
 ### Mortality
-The number of individuals after the mortality phase of the model $N''_{j,i}$ is defined as:
+The number of individuals after the mortality phase of the model $N''_{j,i,t}$ is defined as:
 \begin{equation*}
-N''_{j,i}=N'_{j,i}\exp(-(M1_{j,i}+M2_{j,i}+F_{j,i})).
+N''_{j,i,t}=N'_{j,i,t}\exp(-(M1_{j,i}+M2_{j,i,t}+F_{j,i,t})\delta{}t).
 \end{equation*}
 where $M1$ is the background mortality, $M2$ is the predation mortality and $F$ is the fishing mortality (represented by `Fs` in `LeMaRns`). The predation mortality of a fish of species $i$ in length class $j$ is
 \begin{equation*}
-M2_{j,i}=\sum_{m=1}^{n_s}\sum_{n=1}^{n_l}I_{j,i}N_{j,i}\frac{U(W_{n,m},W_{j,i},m,i)}{\sum_{k=1}^{n_s}\sum_{l=1}^{n_l}U(W_{n,m},W_{l,k},m,k)W_{l,k}N_{l,k} + o}
+M2_{j,i,t}=\sum_{m=1}^{n_s}\sum_{n=1}^{n_l}I_{j,i}N'_{j,i,t}\frac{U(W_{n,m},W_{j,i},m,i)}{\sum_{k=1}^{n_s}\sum_{l=1}^{n_l}U(W_{n,m},W_{l,k},m,k)W_{l,k}N_{l,k} + o}
 \end{equation*}
 where $o$ is other food.
 
 The catch of species $i$ in length class $j$ is
 \begin{equation*}
-C_{j,i}= N'_{j,i}(1-\exp(-F_{j,i})).
+C_{j,i,t}= N'_{j,i,t}(1-\exp(-F_{j,i,t}\delta{}t)).
 \end{equation*}
 
 In `LeMaRns`, `M2` is calculated and then added to `Fs`, `M1` and a numerical stability parameter known as `eps`. Total mortality `Z` and the `Catch` for each species and length class (g) is calculated by running:
@@ -603,8 +606,8 @@ The number of individuals after the growth phase $N_{j,i,t}$ is defined as:
 \begin{equation*}
 N_{j,i,t}=
 \begin{cases}
-    N''_{j,i}(1-\phi_{j,i})      & \quad \text{if } j=1\\
-    N''_{j,i}(1-\phi_{j,i}) + N''_{j-1,i}\phi_{j-1,i}      & \quad \text{otherwise}
+    N''_{j,i,t}(1-\phi_{j,i})      & \quad \text{if } j=1\\
+    N''_{j,i,t}(1-\phi_{j,i}) + N''_{j-1,i,t}\phi_{j-1,i}      & \quad \text{otherwise}
 \end{cases}
 \end{equation*}
 In `LeMaRns`, growth is calculated by running:
@@ -615,7 +618,7 @@ N <- calc_growth(N, phi, nfish, nsc)
 ## `run_LeMans` function
 Alternatively, the `run_LeMans` function can be used to run a dynamic version of the model over a given number of years (as defined by `years`). 
 
-There are several ways to use the `run_LeMans` function. All of the parameters can be added to the function explicitly. To do this, we first need to define the initial population and set the correct number of time steps. Below we run the model for 10 years:
+There are several ways to use the `run_LeMans` function. All of the parameters can be added to the function explicitly. To do this, we first need to define the initial population and set the correct number of time steps. Below we run the model for 50 years:
 ```{r}
 N0 <- get_N0(nsc, nfish, mid, wgt, sc_Linf, intercept=1e10, slope=-5) # initialise N
 years <- 50 # run for 10 years
@@ -645,8 +648,8 @@ model_run <- run_LeMans(NS_params, N0=N0, Fs=Fs, tot_time=tot_time)
 ```
 Another alternative is to use the `run_LeMans` function to initialise the model as well. To do this, `effort` must be defined as a `years` by `dim(Qs)[3]` matrix where the fishing effort remains the same for a whole year: 
 ```{r}
-effort <- matrix(0.5, years, dim(Qs)[3])
-model_run <- run_LeMans(NS_params, years=50, effort=effort)
+effort_mat <- matrix(0.5, years, dim(Qs)[3])
+model_run <- run_LeMans(NS_params, years=50, effort=effort_mat)
 ```
 
 # Exploring the outputs
@@ -690,18 +693,17 @@ plot_biomass(inputs=NS_params, outputs=model_run, time_steps=1:500, species=1:21
 ```
 returns the following plot:
 
-```{r, echo=FALSE}
+```{r, echo=FALSE,fig.height=5,fig.width=7,fig.align="center"}
 plot_biomass(inputs=NS_params, outputs=model_run, time_steps=1:500, species=1:21)
 ```
 
 Alternatively, users may pass the outputs of `get_biomass` to the `plot_biomass` function directly as shown below:
 ```{r, eval=FALSE}
-biomass <- get_biomass(inputs=NS_params, outputs=NS_params)
+biomass <- get_biomass(inputs=NS_params, outputs=model_run)
 plot_biomass(biomass=biomass, time_steps=1:500, species=1:4)
 ```
-
 The `full_plot_only` option allows users to specify whether individual plots should also be produced for each species. For example, the following plots are returned by setting `full_plot_only` to `FALSE`:
-```{r}
+```{r, eval=TRUE,fig.height=5,fig.width=7,fig.align="center"}
 plot_biomass(inputs=NS_params, outputs=model_run, time_steps=1:500, species=1:4, 
              full_plot_only=FALSE)
 ```
@@ -716,7 +718,7 @@ SSB_{i,t}=\sum_{j=1}^{n_l}M_{j,i}N_{j,i,t}W_{j,i}
 where $M_{j,i}$ is the proportion of mature individuals of species $i$ in length class $j$.
 
 In `LeMaRns` the SSB of each species can be calculated using the `get_SSB` function and plotted using the `plot_SSB` function, both of which work in exactly the same way as `get_biomass` and `plot_biomass` as described above. For example, species-specific SSB may be calculated and plotted by running: 
-```{r}
+```{r,fig.height=5,fig.width=7,fig.align="center"}
 SSB <- get_SSB(inputs=NS_params, outputs=model_run, time_steps=1:500, species=1:21)
 plot_SSB(SSB=SSB, time_steps=1:500, species=1:21, species_names=NS_params@species_names)
 ```
@@ -806,7 +808,7 @@ plot_indicators(LFI=indicators[['LFI']], MML=indicators[['MML']],
 ```
 In both cases, the following plot will be returned:
 
-```{r, eval=TRUE, echo=FALSE, fig.height=6}
+```{r, eval=TRUE, echo=FALSE,fig.height=5,fig.width=7,fig.align="center"}
 plot_indicators(inputs=NS_params, outputs=model_run, time_steps=1:500, species=1:21, 
                 length_LFI=c(30, 40), prob=c(0.5, 0.95))
 ```
@@ -824,28 +826,28 @@ In this section we give two examples of mixed fisheries and an example of findin
 Please note that the parameters in the example dataset in `LeMaRns` have not been calibrated to observations. Therefore the case studies are demonstrations of the package and the results should not be interpreted. For methods on calibrating these kinds of models see @thorpe2015 or @spence.
 
 ## Fishing fleets
-In this case study we explore the mixed fishery example described in @thorpe2016, which involves four different fishing fleets. Here, we use idealised fleets, i.e. a single fish is caught by only one gear type. The data frame `mixed_fish` contains the information on which fleet catches which species:
+In this case study we explore the mixed fishery example described in @thorpe2016, which involves four different fishing fleets. Here, we use idealised fleets, i.e. a single fish is caught by only one gear type. The data frame `NS_mixed_fish` contains the information on which fleet catches which species:
 ```{r}
-mixed_fish
+NS_mixed_fish
 ```
-In this example, the selectivity of each species follows the `logistic` curve and requires the parameters `eta` and `L50`, which are provided as part of `LeMaRns`.
+In this example, the selectivity of each species follows the `logistic` curve and requires the parameters `NS_eta` and `NS_L50`, which are provided as part of `LeMaRns`.
 
 We first set up the `LeMans_params` object:
 ```{r}
-NS_params <- LeMansParam(df=NS_par, gdf = mixed_fish, tau=NS_tau, eta=eta, L50=L50, other=1e12)
+NS_params <- LeMansParam(df=NS_par, gdf = NS_mixed_fish, tau=NS_tau, eta=NS_eta, L50=NS_L50, other=NS_other)
 ```
 Initially we will examine the virgin biomass by running the model to equilibrium with no fishing. To do this, we set up effort and then run the model for 50 years:
 ```{r}
-effort <- matrix(0, 50, dim(NS_params@Qs)[3])
-colnames(effort) <- c("Industrial", "Otter", "Beam", "Pelagic")
-model_run <- run_LeMans(NS_params, years=50, effort=effort)
+effort_mat <- matrix(0, 50, dim(NS_params@Qs)[3])
+colnames(effort_mat) <- c("Industrial", "Otter", "Beam", "Pelagic")
+model_run <- run_LeMans(NS_params, years=50, effort=effort_mat)
 ```
 We plot Spawning Stock Biomass (SSB) to ensure it has reached equilibrium: 
-```{r}
+```{r,fig.height=5,fig.width=7,fig.align="center"}
 plot_SSB(inputs=NS_params, outputs=model_run, full_plot_only=TRUE)
 ```
 and then check the indicators:
-```{r, fig.height=6}
+```{r,,fig.height=5,fig.width=7,fig.align="center"}
 plot_indicators(inputs=NS_params, outputs=model_run)
 ```
 We take the mean of the final year of the simulation to calculate the virgin SSB:
@@ -861,19 +863,22 @@ efs <- expand.grid(Industrial=ef_lvl, Otter=ef_lvl, Beam=ef_lvl, Pelagic=ef_lvl)
 We run the LeMans model for 50 years from the final state of the model in the `model_run` above. For efficiency we create a function that takes in the factorial design and then runs the LeMans model:
 ```{r}
 run_the_model<- function(ef){
-  effort <- matrix(ef, 50, dim(NS_params@Qs)[3], byrow=T)
-  colnames(effort) <- c("Industrial", "Otter", "Beam", "Pelagic")
+  effort_mat <- matrix(ef, 50, dim(NS_params@Qs)[3], byrow=T)
+  colnames(effort_mat) <- c("Industrial", "Otter", "Beam", "Pelagic")
   model_run <- run_LeMans(params=NS_params, N0=model_run@N[,,501], 
-                          years=50, effort=effort)
+                          years=50, effort=effort_mat)
   return(model_run)
 }
 ```
 We then run the model over the factorial design (warning this may take a few minutes):
-```{r, eval=T}
+```{r, eval=F}
 sce <- apply(efs, 1, run_the_model)
 ```
+```{r,echo=F}
+load("sce.rda")
+```
 We then calculate the Large Fish Indicator (LFI), Typical Length (TyL) and Mean Maximum Length (MML) for all of the model runs:
-```{r, eval=T}
+```{r, eval=F}
 LFI <- unlist(lapply(lapply(sce, FUN=get_LFI, time_steps=492:501, inputs=NS_params), 
                      mean))
 TyL <- unlist(lapply(lapply(sce, FUN=get_TyL, time_steps=492:501, inputs=NS_params), 
@@ -882,7 +887,7 @@ MML <- unlist(lapply(lapply(sce, FUN=get_MML, time_steps=492:501, inputs=NS_para
                      mean))
 ```
 We can now investigate the effect of changing the effort of each of the fishing gears on the above indicators using box-plots:
-```{r, eval=T, fig.height=6}
+```{r, eval=T,fig.height=5,fig.width=7,fig.align="center"}
 par(mfrow=c(2, 2))
 boxplot(LFI~efs[, 1], main="Industrial", xlab="Effort", ylab="LFI")
 boxplot(LFI~efs[, 2], main="Otter", xlab="Effort", ylab="LFI")
@@ -904,7 +909,7 @@ boxplot(MML~efs[, 4], main="Pelagic", xlab="Effort", ylab="MML")
 All three indicators appear to be mostly driven by the otter gear, which targets larger fish species such as cod and saithe. This suggests that the three indicators are predominantly metrics of the health of the larger species rather than the smaller species.
 
 We also investigate the state of the stocks relative to the virgin SSB:
-```{r, eval=T}
+```{r, eval=F}
 # SSB of the final years (tonnes)
 new_SSB <- do.call(rbind, lapply(lapply(sce, FUN=get_SSB, time_steps=492:501, 
                                         inputs=NS_params), colMeans))/1e6
@@ -913,7 +918,7 @@ rel_SSB <- t(t(new_SSB)/v_SSB)
 colnames(rel_SSB) <- NS_params@species_names
 ```
 Changes in the relative SSB of saithe based on fishing effort is shown below:
-```{r, eval=T, fig.height=6}
+```{r, eval=T,fig.height=5,fig.width=7,fig.align="center"}
 par(mfrow=c(2,2))
 boxplot(rel_SSB[, "Saithe"]~efs[, 1], main="Industrial", xlab="Effort",
         ylab="Relative SSB")
@@ -925,7 +930,7 @@ boxplot(rel_SSB[, "Saithe"]~efs[, 4], main="Pelagic", xlab="Effort",
         ylab="Relative SSB")
 ```
 As expected, the SSB of saithe is most sensitive to the otter gear, which is the fleet that catches it. We now examine the effects of changes in fishing effort on horse mackerel:
-```{r, eval=T, fig.height=6}
+```{r, eval=T ,fig.height=5,fig.width=7,fig.align="center"}
 par(mfrow=c(2,2))
 boxplot(rel_SSB[, "Horse mackerel"]~efs[, 1], main="Industrial", xlab="Effort",
         ylab="Relative SSB")
@@ -939,7 +944,7 @@ boxplot(rel_SSB[, "Horse mackerel"]~efs[, 4], main="Pelagic", xlab="Effort",
 The SSB of horse mackerel is most sensitive to the pelagic fleet, which is the only fleet that catches this species. However, horse mackerel SSB is also sensitive to the otter fleet. It is also interesting to note that under zero pelagic fishing, the SSB of horse mackerel can exceed that of the virgin biomass depending on the fishing effort of the other fleets. This is because of predator-prey interactions and the changing dynamics of the other species, particularly a decrease in the predators of horse mackerel.
 
 In @thorpe2016, a stock is said to be at risk of collapse if the SSB falls below 10\% of the virgin SSB. Below we show the number of stocks that are at risk of collapse for each of the fishing scenarios:
-```{r, eval=T}
+```{r, ,fig.height=5,fig.width=7,fig.align="center",eval=F}
 risk <- apply(rel_SSB, 1, function(x){return(sum(x<0.1))})
 
 par(mfrow=c(2, 2))
@@ -949,7 +954,7 @@ boxplot(risk~efs[, 3], main="Beam", xlab="Effort", ylab="Stocks at risk")
 boxplot(risk~efs[, 4], main="Pelagic", xlab="Effort", ylab="Stocks at risk")
 ```
 The number of stocks at risk of collapse is sensitive to the otter fleet and the beam fleet. Below we plot the mean number of stocks at risk by varying the effort of the otter and the beam fleets:
-```{r, eval=T, fig.height=6}
+```{r, eval=T, fig.height=5,fig.width=7,fig.align="center"}
 z_mat <- outer(ef_lvl, ef_lvl, FUN=function(x, y, efs) {
   mapply(function(x, y, efs) {
   mean(risk[intersect(which(efs[, 2]==x), which(efs[, 3]==y))])}, x=x, y=y,
@@ -968,7 +973,7 @@ box()
 
 ## Dynamic fishing
 We now investigate a dynamical fishing scenario. We first set up effort for the four gears with varying fishing effort, shown below:
-```{r, fig.height=6}
+```{r,fig.height=5,fig.width=7,fig.align="center"}
 Industrial <- rep(1.5, 20)
 Otter <- -1/100*1:20*(1:20-20)
 Beam <- 1:20*1/20+0.25
@@ -986,34 +991,34 @@ plot(1:20, Pelagic, ylab="Effort", main="Pelagic", xlab="Year",
 We then run the model for 20 years from the unfished state (`model_run`) and calculate the annual catches for those 20 years:
 ```{r}
 # Set up effort for the model run
-effort <- cbind(Industrial, Otter, Beam, Pelagic)
-colnames(effort) <- c("Industrial", "Otter", "Beam", "Pelagic")
+effort_mat <- cbind(Industrial, Otter, Beam, Pelagic)
+colnames(effort_mat) <- c("Industrial", "Otter", "Beam", "Pelagic")
 model_run_dyn <- run_LeMans(params=NS_params, N0=model_run@N[,,501],
-                            years=20, effort=effort)
+                            years=20, effort=effort_mat)
 catches <- get_annual_catch(inputs=NS_params, outputs=model_run_dyn)/1e6 # in tonnes
 colnames(catches) <- NS_params@species_names
 ```
 We can then plot the annual catches for different species:
-```{r, fig.height=6}
+```{r,fig.height=5,fig.width=7,fig.align="center"}
 par(mfrow=c(2, 2))
-plot(1:20, catches[, "Sprat"], type="l", main="Sprat", xlab="Years", 
+plot(1:20, catches[, "Sprat"], type="l", main="Sprat", xlab="Year", 
      ylab="Catch (tonnes)", ylim=c(0, max(catches[, "Sprat"])))
-plot(1:20, catches[, "Cod"], type="l", main="Cod", xlab="Years", 
+plot(1:20, catches[, "Cod"], type="l", main="Cod", xlab="Year", 
      ylab="Catch (tonnes)", ylim=c(0, max(catches[, "Cod"])))
-plot(1:20, catches[, "Sole"], type="l", main="Sole", xlab="Years", 
+plot(1:20, catches[, "Sole"], type="l", main="Sole", xlab="Year", 
      ylab="Catch (tonnes)", ylim=c(0,max(catches[, "Sole"])))
-plot(1:20, catches[, "Herring"], type="l", main="Herring", xlab="Years", 
+plot(1:20, catches[, "Herring"], type="l", main="Herring", xlab="Year", 
      ylab="Catch (tonnes)", ylim=c(0, max(catches[, "Herring"])))
 ```
 We can see that sprat and cod is very quickly overfished. We know this because increases in effort beyond a certain point result in a decrease in the total catch of cod. This occurs as the stock size continually decreases for much of the model run, which we can see below. The catch of sole increases as effort increases and the catch of herring also follows the effort dynamics. Below we plot the SSB (in grams):
-```{r}
+```{r, eval = T,fig.height=5,fig.width=7,fig.align="center"}
 plot_SSB(inputs=NS_params, outputs=model_run_dyn, 
          species=c("Sprat", "Cod", "Sole", "Herring"), 
          full_plot_only=FALSE)
 ```
 We also calculate the total catch for each gear and plot it for each year:
-```{r, fig.height=6}
-catch_per_gear <- get_CPG(inputs=NS_params, outputs=model_run_dyn, effort=effort)
+```{r,fig.height=5,fig.width=7,fig.align="center"}
+catch_per_gear <- get_CPG(inputs=NS_params, outputs=model_run_dyn, effort=effort_mat)
 tot_pg <- apply(catch_per_gear, c(2, 3), sum)/1e6
 year <- rep(1:20, each=10)
 # Total catch per gear per year
@@ -1036,8 +1041,8 @@ plot(1:20, tot_pgpy[, 4], type="l", ylim=c(0, max(tot_pgpy[, 4])), xlab="Year",
      main="Pelagic", ylab="Catch (tonnes)")
 ```
 We can also investigate the Catch Per Unit Effort (CPUE) for each species. We calculate the mean CPUE across each year:
-```{r, fig.height=6}
-CPUE <- get_CPUE(inputs=NS_params, outputs=model_run_dyn, effort=effort)/1e6
+```{r,fig.height=5,fig.width=7,fig.align="center"}
+CPUE <- get_CPUE(inputs=NS_params, outputs=model_run_dyn, effort=effort_mat)/1e6
 cpue_py <- t(sapply(1:20, function(x, year){
   tele <- which(year==x)
   if (length(tele)>1){
@@ -1049,13 +1054,13 @@ cpue_py <- t(sapply(1:20, function(x, year){
 colnames(cpue_py) <- NS_params@species_names
 
 par(mfrow=c(2, 2))
-plot(1:20, cpue_py[, "Sprat"], type="l", main="Sprat", xlab="Years", 
+plot(1:20, cpue_py[, "Sprat"], type="l", main="Sprat", xlab="Year", 
      ylab="CPUE (tonnes)", ylim=c(0, max(cpue_py[, "Sprat"])))
-plot(1:20, cpue_py[, "Cod"], type="l", main="Cod", xlab="Years", 
+plot(1:20, cpue_py[, "Cod"], type="l", main="Cod", xlab="Year", 
      ylab="CPUE (tonnes)", ylim=c(0, max(cpue_py[, "Cod"])))
-plot(1:20, cpue_py[, "Sole"], type="l", main="Sole", xlab="Years", 
+plot(1:20, cpue_py[, "Sole"], type="l", main="Sole", xlab="Year", 
      ylab="CPUE (tonnes)", ylim=c(0, max(cpue_py[, "Sole"])))
-plot(1:20, cpue_py[, "Herring"], type="l", main="Herring", xlab="Years", 
+plot(1:20, cpue_py[, "Herring"], type="l", main="Herring", xlab="Year", 
      ylab="CPUE (tonnes)", ylim=c(0, max(cpue_py[, "Herring"])))
 ```
 Sprat,  Cod and sole are always overfished and herring is overfished in some years and underfished in others.
@@ -1068,36 +1073,36 @@ rec_fish <- data.frame(catch_species=c("Cod", "Haddock", "Herring", "Horse macke
 rec_fish$max_catchability <- c(0.01, 0.01, 0.005, 0.05, 0.05, 0.01, 0.01, 0.02)
 Lmin <- c(35, 30, 20, 15, 30, 27, 35, 27)
 ```
-To run the `LeMansParam` function `rec_fish` and `mixed_fish` need to be combined:
+To run the `LeMansParam` function `rec_fish` and `NS_mixed_fish` need to be combined:
 ```{r}
-gdf <- rbind(mixed_fish, rec_fish)
+gdf <- rbind(NS_mixed_fish, rec_fish)
 ```
 and `L50`, `eta` and `Lmin` must be the same size as `nrow(gdf)`:
 ```{r}
-eta1 <- c(eta, rep(0, 8))
-L501 <- c(L50, rep(0, 8))
+eta1 <- c(NS_eta, rep(0, 8))
+L501 <- c(NS_L50, rep(0, 8))
 Lmin1 <- c(rep(0, 21), Lmin)
 ```
 We can then create the `LeMans_param` object and effort: 
 ```{r}
 NS_params_rec <- LeMansParam(df=NS_par, gdf = gdf, tau=NS_tau, eta=eta1, L50=L501, 
-                             other=1e12, Lmin=Lmin1)
-effort1 <- cbind(effort, 0.1+1:20*0.05/20)
-colnames(effort1)[5] <- "Recreational"
+                             other=NS_other, Lmin=Lmin1)
+effort_mat1 <- cbind(effort_mat, 0.1+1:20*0.05/20)
+colnames(effort_mat1)[5] <- "Recreational"
 ```
 with the effort of the recreational fishing fleet being:
 ```{r, fig.width=5.5, fig.height=4, fig.align="center"}
-plot(1:20, effort1[, "Recreational"], xlab="Years", ylab="Effort", type="l", 
+plot(1:20, effort_mat1[, "Recreational"], xlab="Years", ylab="Effort", type="l", 
      ylim=c(0, 2), main="Recreational")
 ```
 We then run the model:
 ```{r}
 model_run_rec <- run_LeMans(params=NS_params_rec, N0=model_run@N[,,501], 
-                            years=20, effort=effort1)
+                            years=20, effort=effort_mat1)
 ```
 and explore the catches for the recreational fleet:
-```{r, fig.height=6}
-catch_per_gear_rec <- get_CPG(inputs=NS_params_rec, outputs=model_run_rec, effort=effort1)
+```{r, fig.height=5,fig.width=7,fig.align="center"}
+catch_per_gear_rec <- get_CPG(inputs=NS_params_rec, outputs=model_run_rec, effort=effort_mat1)
 rec_py <- t(sapply(1:20, function(x, year){
   tele <- which(year==x)
   if (length(tele)>1){
@@ -1108,24 +1113,24 @@ rec_py <- t(sapply(1:20, function(x, year){
 colnames(rec_py) <- NS_params_rec@species_names
 
 par(mfrow=c(2, 2))
-plot(1:20, rec_py[, "Herring"], type="l", main="Herring", xlab="Years", 
+plot(1:20, rec_py[, "Herring"], type="l", main="Herring", xlab="Year", 
      ylab="Catch (tonnes)")
-plot(1:20, rec_py[, "Mackerel"], type="l", main="Horse mackerel", xlab="Years", 
+plot(1:20, rec_py[, "Mackerel"], type="l", main="Horse mackerel", xlab="Year", 
      ylab="Catch (tonnes)")
-plot(1:20, rec_py[, "Cod"], type="l", main="Cod", xlab="Years", 
+plot(1:20, rec_py[, "Cod"], type="l", main="Cod", xlab="Year", 
      ylab="Catch (tonnes)")
-plot(1:20 ,rec_py[, "Saithe"], type="l", main="Saithe", xlab="Years", 
+plot(1:20 ,rec_py[, "Saithe"], type="l", main="Saithe", xlab="Year", 
      ylab="Catch (tonnes)")
 ```
 
 ## Nash equilibrium
 Fish stocks are often managed by considering the fishing mortality that maximises the long-term yield, i.e. the Maximum Sustainable Yield (MSY). We can define $f_i(F_i, F_{-i})$ as the long-term catch of the $i$th stock, where $F_i$ is the fishing mortality of the $i$th stock and $F_{-i}$ is the fishing mortalities of the other stocks. Many stocks are managed on a stock by stock basis using single-species models. This means that
 \begin{equation*}
-f_i(F_i,F_{-i})=f_i(F_i,F'_{-i})=f_i(F_i),
+f_i(F_i,F_{-i})=f_i(F_i,F'_{-i}),
 \end{equation*}
 $\forall{}F'_{-i}$ and we can define
 \begin{equation*}
-F_{MSY,i}={\text{arg}\max}_{F_i}f_i(F_i).
+F_{MSY,i}={\text{arg}\max}_{F_i}f_i(F_i,F'_{-i}).
 \end{equation*}
 In the single-species world this is commonly well defined. However, in the multispecies world stocks interact with one another and the fishing mortality of the $j$th stock affects the catch of the $i$th stock, i.e.
 \begin{equation*}
@@ -1138,7 +1143,7 @@ We therefore need to define a multispecies maximum sustainable yield. One possib
 
 We use the `LeMaRns` package to calculate the Nash equilibrium. First we initialise a model run:
 ```{r,eval=T}
-NS_params_n <- LeMansParam(NS_par, tau=NS_tau, eta=eta, L50=L50, other=1e12)
+NS_params_n <- LeMansParam(NS_par, tau=NS_tau, eta=NS_eta, L50=NS_L50, other=NS_other)
 model_run_n_init <- run_LeMans(NS_params_n, years=50)
 # Set the initial state
 N0 <- model_run_n_init@N[,,501]
@@ -1152,7 +1157,7 @@ calc_catch<-function(x,i,eff){
 }
 ```
 Starting from $F_{MSY}$ in @thorpe2016, we iteratively optimise the fishing effort for each species. We continue this process until the difference in the optimal effort and the effort at the start of the optimisation differ by less than `0.01` for all species.
-```{r,eval=T}
+```{r,eval=F}
 eff <- fmsy <-c(1.3, 0.35, 0.35, 0.72, 0.6, 0.41, 0.25, 0.5, 0.33, 0.22, 0.32, 0.21, 0.27,
                 0.27, 0.25, 0.15, 0.30, 0.11, 0.1, 0.19, 0.3)
 stat <- rep(FALSE, 21)
@@ -1164,13 +1169,17 @@ while(any(stat==FALSE)){
   }
 }
 ```
+```{r,echo=F}
+load("nash.rda")
+msy <- run_LeMans(NS_params_n, N0=N0, years=20, effort=matrix(fmsy_lm, nrow=20, ncol=21, byrow=T))
+```
 `eff` is the Nash equilibrium. Below we plot the SSB for the Nash equilibrium:
-```{r,eval=T}
+```{r,eval=T,fig.height=5,fig.width=7,fig.align="center"}
 nash <- run_LeMans(NS_params_n, N0=N0, years=20, effort=matrix(eff, nrow=20, ncol=21, byrow=T))
 plot_SSB(inputs=NS_params_n, outputs=nash)
 ```
 To compare this to the single-species MSY we have to change the rules slightly as we have to specify the fishing mortality rates for the other species. Arbitrarily we choose to set `effort=fmsy` for all the but the $i$th species when calculating $F_{MSY,i}$. This is:
-```{r,eval=T}
+```{r,eval=F}
 fmsy_lm <- sapply(1:21, function(i, eff){optim(eff[i], calc_catch, i=i, eff=eff,
                                            method="Brent", lower=0, upper=2,control = list(fnscale = -1))$par},
                 eff=fmsy)

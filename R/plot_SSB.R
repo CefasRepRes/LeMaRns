@@ -16,6 +16,7 @@ NULL
 #' @param SSB A numeric vector or a matrix representing the outputs of the function \code{get_SSB()}. This option is only required if \code{inputs} and \code{outputs} are not provided.
 #' @param biomass A numeric vector or a matrix representing the outputs of the function \code{get_biomass()}. This option is only required if \code{inputs} and \code{outputs} are not provided.
 #' @param full_plot_only A logical statement indicating whether a single plot depicting the SSB of all of the selected species should be produced (\code{full_plot_only=TRUE}) or multiple plots depicting the SSB of individual species should be produced (\code{full_plot_only=FALSE}). The default is \code{TRUE}.
+#' @param units A character string denoting the units of weight used in the model. The default is \code{"g"}.
 #' @param ... Additional arguments.
 #' @return \code{plot_SSB} returns line plots of the in SSB of the selected species through time.
 #' @return \code{plot_biomass} returns line plots of the changes in biomass of the selected species through time.
@@ -142,7 +143,7 @@ setMethod('plot_SSB', signature(inputs="missing", outputs="LeMans_outputs"),
 
 #' @rdname plot_SSB
 setMethod('plot_SSB', signature(inputs="missing", outputs="missing"),
-          function(wgt, mature, N, species, species_names, time_steps, SSB, full_plot_only=TRUE, ...) {
+          function(wgt, mature, N, species, species_names, time_steps, SSB, full_plot_only=TRUE, units="g", ...) {
             # If SSB is present but species and time_steps are missing, give default values
             if (!missing(SSB)) {
               if (is.matrix(SSB)) {
@@ -194,7 +195,7 @@ setMethod('plot_SSB', signature(inputs="missing", outputs="missing"),
             if (is.vector(SSB)) {
               par(mfrow=c(1,1), mar=c(5,5,5,0))
               layout(matrix(c(1,1,1,2,1,1,1,2,1,1,1,2), nrow=3, byrow=TRUE))
-              plot(time_steps, SSB, xlab="Time steps", ylab="SSB", type="l", font.lab=2, cex.lab=1.5, cex.axis=1.5, log="y")
+              plot(time_steps, SSB, xlab="Time steps", ylab=paste("SSB (", units, ")", sep = ""), type="l", font.lab=2, cex.lab=1.5, cex.axis=1.5, log="y")
               par(mar=c(0,0,0,0))
               plot(0, 0, axes=F, type="n", xlab="", ylab="")
               legend("center", legend=species_names, col="black", lty=1, cex=1.2, bty="n")
@@ -203,7 +204,7 @@ setMethod('plot_SSB', signature(inputs="missing", outputs="missing"),
                 # Plot species individually in a 2x2 matrix
                 par(mfrow=c(2,2), mar=c(5,5,5,5))
                 for (i in 1:ncol(SSB)) {
-                  plot(c(min(time_steps), max(time_steps)), c(min(SSB), max(SSB)), type="n", xlab="Time step", ylab="SSB", font.lab=2, log="y", main=species_names[i])
+                  plot(c(min(time_steps), max(time_steps)), c(min(SSB), max(SSB)), type="n", xlab="Time step", ylab=paste("SSB (", units, ")", sep = ""), font.lab=2, log="y", main=species_names[i])
                   lines(time_steps, SSB[, i])
                 }
               }
@@ -212,7 +213,7 @@ setMethod('plot_SSB', signature(inputs="missing", outputs="missing"),
               par(mfrow=c(1,1), mar=c(5,5,5,0))
               layout(matrix(c(1,1,1,2,1,1,1,2,1,1,1,2), nrow=3, byrow=TRUE))
               rainbowcols <- rainbow(ncol(SSB), s=0.75)
-              plot(c(min(time_steps), max(time_steps)), c(min(SSB), max(SSB)), type="n", xlab="Time step", ylab="SSB", font.lab=2, cex.lab=1.5, cex.axis=1.5, log="y")
+              plot(c(min(time_steps), max(time_steps)), c(min(SSB), max(SSB)), type="n", xlab="Time step", ylab=paste("SSB (", units, ")", sep = ""), font.lab=2, cex.lab=1.5, cex.axis=1.5, log="y")
               for (i in 1:ncol(SSB)) {
                 lines(time_steps, SSB[, i], col=rainbowcols[i])
               }
@@ -331,7 +332,7 @@ setMethod('plot_biomass', signature(inputs="missing", outputs="LeMans_outputs"),
 
 #' @rdname plot_SSB
 setMethod('plot_biomass', signature(inputs="missing", outputs="missing"),
-          function(wgt, N, species, time_steps, species_names, biomass, full_plot_only=TRUE, ...) {
+          function(wgt, N, species, time_steps, species_names, biomass, full_plot_only=TRUE, units="g", ...) {
             # If biomass is present but species and time_steps are missing, give default values
             if (!missing(biomass)) {
               if (is.matrix(biomass)) {
@@ -383,7 +384,7 @@ setMethod('plot_biomass', signature(inputs="missing", outputs="missing"),
             if (is.vector(biomass)) {
               par(mfrow=c(1,1), mar=c(5,5,5,0))
               layout(matrix(c(1,1,1,2,1,1,1,2,1,1,1,2), nrow=3, byrow=TRUE))
-              plot(time_steps, biomass, xlab="Time steps", ylab="Biomass", type="l", font.lab=2, cex.lab=1.5, cex.axis=1.5, log="y")
+              plot(time_steps, biomass, xlab="Time steps", ylab=paste("Biomass (", units, ")", sep = ""), type="l", font.lab=2, cex.lab=1.5, cex.axis=1.5, log="y")
               par(mar=c(0,0,0,0))
               plot(0, 0, axes=F, type="n", xlab="", ylab="")
               legend("center", legend=species_names, col="black", lty=1, cex=1.2, bty="n")
@@ -392,7 +393,7 @@ setMethod('plot_biomass', signature(inputs="missing", outputs="missing"),
                 # Plot species individually in a 2x2 matrix
                 par(mfrow=c(2,2), mar=c(5,5,5,5))
                 for (i in 1:ncol(biomass)) {
-                  plot(c(min(time_steps), max(time_steps)), c(min(biomass), max(biomass)), type="n", xlab="Time step", ylab="Biomass", font.lab=2, log="y", main=species_names[i])
+                  plot(c(min(time_steps), max(time_steps)), c(min(biomass), max(biomass)), type="n", xlab="Time step", ylab=paste("Biomass (", units, ")", sep = ""), font.lab=2, log="y", main=species_names[i])
                   lines(time_steps, biomass[, i])
                 }
               }
@@ -401,7 +402,7 @@ setMethod('plot_biomass', signature(inputs="missing", outputs="missing"),
               par(mfrow=c(1,1), mar=c(5,5,5,0))
               layout(matrix(c(1,1,1,2,1,1,1,2,1,1,1,2), nrow=3, byrow=TRUE))
               rainbowcols <- rainbow(ncol(biomass), s=0.75)
-              plot(c(min(time_steps), max(time_steps)), c(min(biomass), max(biomass)), type="n", xlab="Time step", ylab="Biomass", font.lab=2, cex.lab=1.5, cex.axis=1.5, log="y")
+              plot(c(min(time_steps), max(time_steps)), c(min(biomass), max(biomass)), type="n", xlab="Time step", ylab=paste("Biomass (", units, ")", sep = ""), font.lab=2, cex.lab=1.5, cex.axis=1.5, log="y")
               for (i in 1:ncol(biomass)) {
                 lines(time_steps, biomass[, i], col=rainbowcols[i])
               }

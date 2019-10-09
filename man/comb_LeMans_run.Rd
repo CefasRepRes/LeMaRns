@@ -24,7 +24,7 @@ If \code{cont==T}, the first years output from \code{LeMans_run_y} is removed as
 }
 \examples{
 # Set up the inputs to the model
-NS_params <- LeMansParam(NS_par, tau=NS_tau, eta=rep(0.25, 21), L50=NS_par$Lmat, other=1e12)
+NS_params <- LeMansParam(NS_par, tau=NS_tau, eta=rep(0.25, 21), L50=NS_par$Lmat, other=NS_other)
 
 # Define fishing effort
 effort <- matrix(0.5, 10, dim(NS_params@Qs)[3])

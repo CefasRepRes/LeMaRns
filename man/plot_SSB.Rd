@@ -26,7 +26,8 @@ plot_SSB(inputs, outputs, ...)
   time_steps, species_names, SSB, ...)
 
 \S4method{plot_SSB}{missing,missing}(wgt, mature, N, species,
-  species_names, time_steps, SSB, full_plot_only = TRUE, ...)
+  species_names, time_steps, SSB, full_plot_only = TRUE, units = "g",
+  ...)
 
 plot_biomass(inputs, outputs, ...)
 
@@ -40,7 +41,7 @@ plot_biomass(inputs, outputs, ...)
   time_steps, biomass, species_names, ...)
 
 \S4method{plot_biomass}{missing,missing}(wgt, N, species, time_steps,
-  species_names, biomass, full_plot_only = TRUE, ...)
+  species_names, biomass, full_plot_only = TRUE, units = "g", ...)
 }
 \arguments{
 \item{inputs}{A \code{\linkS4class{LeMans_param}} object containing the parameter values of the current LeMans model. This option is only required if \code{SSB} is not provided.}
@@ -64,6 +65,8 @@ plot_biomass(inputs, outputs, ...)
 \item{mature}{A matrix with dimensions \code{nsc} and \code{nfish} and elements in the range 0-1 representing the proportion of individuals that are mature for each species and length class, where \code{nsc} represents the number of length classes in the model and \code{nfish} represents the number of species in the model. This option is only required if \code{outputs} and \code{SSB} are not provided.}
 
 \item{full_plot_only}{A logical statement indicating whether a single plot depicting the SSB of all of the selected species should be produced (\code{full_plot_only=TRUE}) or multiple plots depicting the SSB of individual species should be produced (\code{full_plot_only=FALSE}). The default is \code{TRUE}.}
+
+\item{units}{A character string denoting the units of weight used in the model. The default is \code{"g"}.}
 
 \item{biomass}{A numeric vector or a matrix representing the outputs of the function \code{get_biomass()}. This option is only required if \code{inputs} and \code{outputs} are not provided.}
 }

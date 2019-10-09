@@ -30,8 +30,20 @@ File 'LeMaRns/libs/x64/LeMaRns.dll':
    
 We tried multiple fixes but could not resolve this issue.
 
-For R-hub tests we got the same results for windows but there seems to be an issue with `BioCinstaller` on Linux machines. This is an open issue see: [github](https://github.com/r-hub/rhub/issues/279).
-
 ## Downstream dependencies
 
 There are currently no downstream dependencies for this package.
+
+## Resubmission 1
+This is a resubmission. In this version I have:
+
+* changed the descriptions of the package. It now reads: Set up, run and explore the outputs of the Length-based Multi-species model (LeMans; Hall et al. 2006; <doi:10.1139/f06-039>), focused on the marine environment.
+
+* reduced the vignette runtime by precomputing the results for the lengthy parts.
+
+* added the ORCID identifier for the authors.
+
+## Resubmission 2
+This is a resubmission. In this version I have:
+
+* changed the Title field to be in title case. It now reads: Length-Based Multispecies Analysis by Numerical Simulation.

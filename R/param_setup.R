@@ -80,7 +80,7 @@ setClass("LeMans_param", slots=
 #' @param tau A matrix with dimensions \code{nfish} and \code{nsc}. Row indices represent predators and column indices represent prey. A value of 1 at location \code{i}, \code{j} indicates prey \code{j} is eaten by predator \code{i}.
 #' @param rec_fun A character vector representing the stock recruitment function to be applied to each species. The default value is \code{"hockey-stick"} but \code{rec_fun} can take a value of \code{"Ricker"}, \code{"Beverton-Holt"}, \code{"constant"}, or \code{"linear"} for each species.
 #' @param recruit_params A list object of length \code{nfish} specifying the parameters for the recruitment function.
-#' @param natmort_opt A character vector of length \code{1} describing the mortality function to be used for the species. This can take the value \code{"std_RNM"}, \code{"constant"} or \code{"linear"}. See \code{calc_M1} for more information.
+#' @param natmort_opt A character vector of length \code{1} describing the mortality function to be used for the species. The default value is \code{"std_RNM"} but can take a value of \code{"constant"} or \code{"linear"}. See \code{calc_M1} for more information.
 #' @param Nmort A numeric vector of length \code{nfish} representing the maximum background mortality of each species. The default is \code{0.8} for all species.
 #' @param prop A numeric vector of length \code{nfish} representing the proportion of length classes that have a non-zero background mortality. This is required only when the \code{natmort_opt} mortality function is used. The default is \code{3/4}.
 #' @param curve A character vector of almost any length describing the type of curve to be used to determine the catchability of each species by fishing gear. By default, \code{curve} is a character vector of length \code{nfish} that takes the value \code{"logistic"} in each element, but it can also take a value of \code{"log-gaussian"} or \code{"knife-edge"}. If a custom curve is required for a particular species and/or fishing gear, the curve must be specified in \code{custom}.
@@ -102,11 +102,12 @@ setClass("LeMans_param", slots=
 #' Lmat <- NS_par$Lmat # the length at which 50% of individuals are mature (cm).
 #'
 #' NS_params <- LeMansParam(species_names=NS_par$species_names, Linf=Linf, k=k, W_a=W_a, W_b=W_b,
-#' Lmat=Lmat, tau=NS_tau, recruit_params=list(a=NS_par$a, b=NS_par$b), eta=rep(0.25, 21), L50=Lmat)
+#' Lmat=Lmat, tau=NS_tau, recruit_params=list(a=NS_par$a, b=NS_par$b), eta=rep(0.25, 21), L50=Lmat,
+#' other=NS_other)
 #'
 #' ###############################################
 #' # Alternatively:
-#' NS_params <- LeMansParam(NS_par, tau=NS_tau, eta=rep(0.25, 21), L50=NS_par$Lmat, other=1e12)
+#' NS_params <- LeMansParam(NS_par, tau=NS_tau, eta=rep(0.25, 21), L50=NS_par$Lmat, other=NS_other)
 #' @export
 setGeneric("LeMansParam",function(df, gdf, ...)
   standardGeneric('LeMansParam'))

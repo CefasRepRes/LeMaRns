@@ -22,6 +22,7 @@ NULL
 #' @param LFI A numeric vector or matrix representing the outputs of the function \code{get_LFI()}. This option is only required if \code{inputs} and \code{outputs} are not provided.
 #' @param TyL A numeric vector representing the outputs of the function \code{get_TyL()}. This option is only required if \code{inputs} and \code{outputs} are not provided.
 #' @param LQ A numeric vector or matrix representing the outputs of the function \code{get_LQ()}. This option is only required if \code{inputs} and \code{outputs} are not provided.
+#' @param units A character string denoting the units of length used in the model. The default is \code{"cm"}.
 #' @param ... Additional arguments.
 #' @return \code{plot_indicators} returns a set of four line plots depicting changes in the MML, LFI, TyL and LQ(s) of the community (including only the selected species) over time.
 #' @return \code{plot_LFI} returns a line plot depicting the LFI of the community (including only the selected species) over time.
@@ -80,7 +81,7 @@ setMethod('plot_indicators', signature(inputs="missing", outputs='LeMans_outputs
 
 #' @rdname plot_indicators
 setMethod('plot_indicators', signature(inputs="missing", outputs='missing'),
-          function(wgt, mid, l_bound, u_bound, Linf, N, species, time_steps, species_names=NULL, prob, length_LFI, MML, TyL, LFI, LQ, ...) {
+          function(wgt, mid, l_bound, u_bound, Linf, N, species, time_steps, species_names=NULL, prob, length_LFI, MML, TyL, LFI, LQ, units="cm", ...) {
             # Save users plot settings
             def.par <- par(no.readonly=TRUE)
 
@@ -112,7 +113,7 @@ setMethod('plot_indicators', signature(inputs="missing", outputs='missing'),
 
             # Plot
             par(mar=c(5,5,5,0))
-            plot(x=time_steps, y=MML, ylab="MML", xlab="Time steps", type="l", font.lab=2, cex.lab=1.5, cex.axis=1.5)
+            plot(x=time_steps, y=MML, ylab=paste("MML (", units, ")", sep = ""), xlab="Time steps", type="l", font.lab=2, cex.lab=1.5, cex.axis=1.5)
 
             ############################ LFI ############################
             if (missing(LFI)) {
@@ -158,7 +159,7 @@ setMethod('plot_indicators', signature(inputs="missing", outputs='missing'),
               plot(x=time_steps, y=LFI, xlab="Time steps", ylab="LFI", type="l", font.lab=2, cex.lab=1.5, cex.axis=1.5)
               par(mar=c(0,0,0,0))
               plot(0, 0, axes=F, type="n", xlab="", ylab="")
-              legend("center", legend=length_LFI, col="black", lty=1, cex=1.5, bty="n")
+              legend("center", legend=paste(length_LFI, " ", units, sep=""), col="black", lty=1, cex=1.5, bty="n")
             } else if (is.matrix(LFI)) {
               # Plot the quantiles together
               rainbowcols <- rainbow(ncol(LFI), s=0.75)
@@ -169,7 +170,7 @@ setMethod('plot_indicators', signature(inputs="missing", outputs='missing'),
               }
               par(mar=c(0,0,0,0))
               plot(0, 0, axes=F, type="n", xlab="", ylab="")
-              legend("center", legend=length_LFI, col=rainbowcols, lty=1, cex=1.5, bty="n")
+              legend("center", legend=paste(length_LFI, " ", units, sep=""), col=rainbowcols, lty=1, cex=1.5, bty="n")
             }
 
             ############################ TyL ############################
@@ -196,7 +197,7 @@ setMethod('plot_indicators', signature(inputs="missing", outputs='missing'),
 
             # Plot
             par(mar=c(5,5,5,0))
-            plot(x=time_steps, y=TyL, ylab="TyL", xlab="Time steps", type="l", font.lab=2, cex.lab=1.5, cex.axis=1.5)
+            plot(x=time_steps, y=TyL, ylab=paste("TyL (", units, ")", sep = ""), xlab="Time steps", type="l", font.lab=2, cex.lab=1.5, cex.axis=1.5)
 
             ############################ LQ ############################
             if (missing(LQ)) {
@@ -242,7 +243,7 @@ setMethod('plot_indicators', signature(inputs="missing", outputs='missing'),
             # Extract required data and plot
             if (is.vector(LQ)) {
               par(mar=c(5,5,5,0))
-              plot(x=time_steps, y=LQ, xlab="Time steps", ylab="LQ", type="l", font.lab=2, cex.lab=1.5, cex.axis=1.5)
+              plot(x=time_steps, y=LQ, xlab="Time steps", ylab=paste("LQ (", units, ")", sep = ""), type="l", font.lab=2, cex.lab=1.5, cex.axis=1.5)
               par(mar=c(0,0,0,0))
               plot(0, 0, axes=F, type="n", xlab="", ylab="")
               legend("center", legend=prob, col="black", lty=1, cex=1.5, bty="n")
@@ -250,7 +251,7 @@ setMethod('plot_indicators', signature(inputs="missing", outputs='missing'),
               # Plot the quantiles together
               rainbowcols <- rainbow(ncol(LQ), s=0.75)
               par(mar=c(5,5,5,0))
-              plot(c(min(time_steps), max(time_steps)), c(min(LQ), max(LQ)), type="n", xlab="Time steps", ylab="LQ", font.lab=2,  cex.lab=1.5, cex.axis=1.5)
+              plot(c(min(time_steps), max(time_steps)), c(min(LQ), max(LQ)), type="n", xlab="Time steps", ylab=paste("LQ (", units, ")", sep = ""), font.lab=2,  cex.lab=1.5, cex.axis=1.5)
               for (i in 1:ncol(LQ)) {
                 lines(time_steps, LQ[, i], col=rainbowcols[i])
               }
@@ -378,7 +379,7 @@ setMethod('plot_LFI', signature(inputs="missing", outputs="LeMans_outputs"),
 
 #' @rdname plot_indicators
 setMethod('plot_LFI', signature(inputs="missing", outputs="missing"),
-          function(wgt, l_bound, u_bound, N, species, time_steps, species_names, length_LFI, LFI, ...) {
+          function(wgt, l_bound, u_bound, N, species, time_steps, species_names, length_LFI, LFI, units="cm", ...) {
             # If LFI is present but species and time_steps are missing, give default values
             if (!missing(LFI)) {
               if (is.matrix(LFI)) {
@@ -430,7 +431,7 @@ setMethod('plot_LFI', signature(inputs="missing", outputs="missing"),
               plot(time_steps, LFI, xlab="Time steps", ylab="LFI", type="l", font.lab=2, cex.lab=1.5, cex.axis=1.5)
               par(mar=c(0,0,0,0))
               plot(0, 0, axes=F, type="n", xlab="", ylab="")
-              legend("center", legend=length_LFI, col="black", lty=1, cex=1.5, bty="n")
+              legend("center", legend=paste(length_LFI, " ", units, sep=""), col="black", lty=1, cex=1.5, bty="n")
             } else if (is.matrix(LFI)) {
               # Plot the quantiles together
               par(mfrow=c(1,1), mar=c(5,5,5,0))
@@ -442,7 +443,7 @@ setMethod('plot_LFI', signature(inputs="missing", outputs="missing"),
               }
               par(mar=c(0,0,0,0))
               plot(0, 0, axes=F, type="n", xlab="", ylab="")
-              legend("center", legend=length_LFI, col=rainbowcols, lty=1, cex=1.5, bty="n")
+              legend("center", legend=paste(length_LFI, " ", units, sep=""), col=rainbowcols, lty=1, cex=1.5, bty="n")
             }
 
             # Reset plot settings
@@ -519,7 +520,7 @@ setMethod('plot_MML', signature(inputs="missing", outputs="LeMans_outputs"),
 
 #' @rdname plot_indicators
 setMethod('plot_MML', signature(inputs="missing", outputs="missing"),
-          function(wgt, Linf, N, species, time_steps, species_names, MML, ...) {
+          function(wgt, Linf, N, species, time_steps, species_names, MML, units="cm", ...) {
             # Save users plot settings
             def.par <- par(no.readonly=TRUE)
 
@@ -548,7 +549,7 @@ setMethod('plot_MML', signature(inputs="missing", outputs="missing"),
 
             # Plot
             par(mfrow=c(1,1), mar=c(5,5,5,5))
-            plot(time_steps, MML, ylab="MML", xlab="Time steps", type="l", font.lab=2, cex.lab=1, cex.axis=1)
+            plot(time_steps, MML, ylab=paste("MML (", units, ")", sep = ""), xlab="Time steps", type="l", font.lab=2, cex.lab=1, cex.axis=1)
 
             # Reset plot settings
             par(def.par)
@@ -624,7 +625,7 @@ setMethod('plot_TyL', signature(inputs="missing", outputs="LeMans_outputs"),
 
 #' @rdname plot_indicators
 setMethod('plot_TyL', signature(inputs="missing", outputs="missing"),
-          function(wgt, mid, N, species, time_steps, species_names, TyL, ...) {
+          function(wgt, mid, N, species, time_steps, species_names, TyL, units="cm", ...) {
             # Save users plot settings
             def.par <- par(no.readonly=TRUE)
 
@@ -653,7 +654,7 @@ setMethod('plot_TyL', signature(inputs="missing", outputs="missing"),
 
             # Plot
             par(mfrow=c(1,1), mar=c(5,5,5,5))
-            plot(time_steps, TyL, ylab="TyL", xlab="Time steps", type="l", font.lab=2, cex.lab=1, cex.axis=1)
+            plot(time_steps, TyL, ylab=paste("TyL (", units, ")", sep = ""), xlab="Time steps", type="l", font.lab=2, cex.lab=1, cex.axis=1)
 
             # Reset plot settings
             par(def.par)
@@ -774,7 +775,7 @@ setMethod('plot_LQ', signature(inputs="missing", outputs="LeMans_outputs"),
 
 #' @rdname plot_indicators
 setMethod('plot_LQ', signature(inputs="missing", outputs="missing"),
-          function(wgt, u_bound, N, species, time_steps, species_names, LQ, prob, ...) {
+          function(wgt, u_bound, N, species, time_steps, species_names, LQ, prob, units="cm", ...) {
             # If LQ is present but species and time_steps are missing, give default values
             if (!missing(LQ)) {
               if (is.matrix(LQ)) {
@@ -823,7 +824,7 @@ setMethod('plot_LQ', signature(inputs="missing", outputs="missing"),
             if (is.vector(LQ)) {
               par(mfrow=c(1,1), mar=c(5,5,5,0))
               layout(matrix(c(1,1,1,1,2,1,1,1,1,2,1,1,1,1,2), nrow=3, byrow=TRUE))
-              plot(time_steps, LQ, xlab="Time steps", ylab="LQ", type="l", font.lab=2, cex.lab=1.5, cex.axis=1.5)
+              plot(time_steps, LQ, xlab="Time steps", ylab=paste("LQ (", units, ")", sep = ""), type="l", font.lab=2, cex.lab=1.5, cex.axis=1.5)
               par(mar=c(0,0,0,0))
               plot(0, 0, axes=F, type="n", xlab="", ylab="")
               legend("center", legend=prob, col="black", lty=1, cex=1.5, bty="n")
@@ -832,7 +833,7 @@ setMethod('plot_LQ', signature(inputs="missing", outputs="missing"),
               par(mfrow=c(1,1), mar=c(5,5,5,0))
               layout(matrix(c(1,1,1,1,2,1,1,1,1,2,1,1,1,1,2), nrow=3, byrow=TRUE))
               rainbowcols <- rainbow(ncol(LQ), s=0.75)
-              plot(c(min(time_steps), max(time_steps)), c(min(LQ), max(LQ)), type="n", xlab="Time steps", ylab="LQ", font.lab=2, cex.lab=1.5, cex.axis=1.5)
+              plot(c(min(time_steps), max(time_steps)), c(min(LQ), max(LQ)), type="n", xlab="Time steps", ylab=paste("LQ (", units, ")", sep = ""), font.lab=2, cex.lab=1.5, cex.axis=1.5)
               for (i in 1:ncol(LQ)) {
                 lines(time_steps, LQ[, i], col=rainbowcols[i])
               }
