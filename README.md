@@ -21,7 +21,7 @@ This is a basic example of how to set up, run and plot the resulting spawning-st
 
 ``` r
 library(LeMaRns)
-NS_params <- LeMansParam(NS_par, tau=NS_tau, eta=eta, L50=L50,other=1e12)
+NS_params <- LeMansParam(NS_par, tau=NS_tau, eta=NS_eta, L50=NS_L50,other=1e12)
 #> Warning in .local(df, gdf, ...): The following columns of df do not match any of the species arguments and were therefore added to recruit_params:
 #> a, b
 effort <- matrix(0.25, 50, dim(NS_params @Qs)[3])
