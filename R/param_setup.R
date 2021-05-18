@@ -315,8 +315,11 @@ setMethod('LeMansParam', signature(df="missing", gdf="missing"),
             if (pred_sigma <= 0) {
               stop("pred_sigma must take a positive value")
             }
-            if (class(tau) != "matrix") {
-              stop("tau must be a matrix of dimensions nfish and nfish")
+            #if (class(tau) != "matrix") {
+            #  stop("tau must be a matrix of dimensions nfish and nfish")
+            #}
+            if (is(tau,"matrix")==FALSE){
+             stop("tau must be a matrix of dimensions nfish and nfish")
             }
             #if (length(catch_species) < 0 | length(catch_species) > nfish) {
             #  stop("The length of catch_species is not equal to nfish")
