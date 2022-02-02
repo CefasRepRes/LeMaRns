@@ -315,7 +315,6 @@ setMethod('LeMansParam', signature(df="missing", gdf="missing"),
             if (pred_sigma <= 0) {
               stop("pred_sigma must take a positive value")
             }
-            #if (class(tau) != "matrix") {
             if (is(tau,"matrix")==FALSE){
              stop("tau must be a matrix of dimensions nfish and nfish")
             }
