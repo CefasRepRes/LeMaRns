@@ -4,8 +4,8 @@ subtitle: "Length-based Multispecies Analysis by Numerical Simulation in R"
 author: "Michael A. Spence, Hayley J. Bannister, Johnathan E. Ball and Robert B. Thorpe"
 date: "`r Sys.Date()`"
 output: 
-  rmarkdown::pdf_document:
-    #rmarkdown::html_vignette:
+  #rmarkdown::pdf_document:
+    rmarkdown::html_vignette:
     fig_width: 7
     fig_height: 5
 vignette: >

@@ -4,9 +4,21 @@
 \alias{calc_ration_growthfac}
 \title{Calculate growth increments}
 \usage{
-calc_ration_growthfac(k, Linf, nsc, nfish, l_bound, u_bound, mid, W_a, W_b,
-  phi_min, vary_growth = TRUE, growth_eff = 0.5,
-  growth_eff_decay = 0.11)
+calc_ration_growthfac(
+  k,
+  Linf,
+  nsc,
+  nfish,
+  l_bound,
+  u_bound,
+  mid,
+  W_a,
+  W_b,
+  phi_min,
+  vary_growth = TRUE,
+  growth_eff = 0.5,
+  growth_eff_decay = 0.11
+)
 }
 \arguments{
 \item{k}{A numeric vector of length \code{nfish} representing the von Bertalanffy growth parameter \code{(1/yr)} for each species.}

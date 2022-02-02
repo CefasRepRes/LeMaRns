@@ -5,4 +5,5 @@
 #' @importFrom graphics layout legend lines par plot
 #' @importFrom methods new
 #' @importFrom stats dlnorm weighted.mean
+#' @importFrom methods is
 NULL

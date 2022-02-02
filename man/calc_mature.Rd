@@ -4,8 +4,7 @@
 \alias{calc_mature}
 \title{Calculate the proportion of mature individuals}
 \usage{
-calc_mature(Lmat, nfish, mid, kappa, sc_Linf, eps = 1e-05,
-  force_mature = TRUE)
+calc_mature(Lmat, nfish, mid, kappa, sc_Linf, eps = 1e-05, force_mature = TRUE)
 }
 \arguments{
 \item{Lmat}{A numeric vector of length \code{nfish} representing the length at which 50\% of individuals are mature for each species.}

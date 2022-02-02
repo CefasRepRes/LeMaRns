@@ -53,6 +53,10 @@ calc_phi <- function(k, Linf, nsc, nfish, u_bound, l_bound, calc_phi_min=FALSE, 
     phi_min <- min(phi[phi>0])
   }
 
+  if(any(phi[phi>0] < phi_min)){
+    warning(paste("phi_min, ",phi_min,", is larger than the smallest phi,",min(phi[phi>0]),".",  sep=""))
+  }
+
   phi[phi>0] <- phi_min/phi[phi>0]
   return(list(phi=phi, phi_min=phi_min))
 }

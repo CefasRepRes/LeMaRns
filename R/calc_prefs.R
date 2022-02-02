@@ -7,7 +7,7 @@
 #' @param sc_Linf A numeric vector of length \code{nsc} representing the length class at which each species reaches its asymptotic length.
 #' @details A predator of species \code{i} in length class \code{j} has a size preference for species \code{k} in length class \code{l} equal to
 #' @details \code{exp(-(log10(wgt[l, k]/wgt[j, i])-pred_mu)^2/(2*pred_sigma))}.
-#' @return An array of dimensions \code{nsc}, \code{nfish}, \code{nsc} and \code{nfish}. The first and second dimensions represent the prey species whereas the third and fourth dimensions represent the predator species.
+#' @return An array of dimensions \code{nsc}, \code{nfish}, \code{nsc} and \code{nfish}. The first and second dimensions represent the predators whereas the third and fourth dimensions represent the prey.
 #' @references Hall, S. J., Collie, J. S., Duplisea, D. E., Jennings, S., Bravington, M., & Link, J. (2006). A length-based multispecies model for evaluating community responses to fishing. \emph{Canadian Journal of Fisheries and Aquatic Sciences}, 63(6):1344-1359.
 #' @references Ursin, E. (1973). On the prey size preferences of cod and dab. \emph{Meddelelser fra Danmarks Fiskeri-og Havundersgelser}, 7:85-98.
 #' @examples

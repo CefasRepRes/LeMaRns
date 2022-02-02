@@ -77,7 +77,7 @@ setClass("LeMans_param", slots=
 #' @param k k A numeric vector of length \code{nfish} representing the von Bertalanffy growth parameter \code{(1/yr)} for each species.
 #' @param Lmat A numeric vector of length \code{nsc} representing the length at which 50\% of the individuals are mature.
 #' @param kappa A numeric vector of length \code{nfish} representing the rate of change from immature to mature fish.
-#' @param tau A matrix with dimensions \code{nfish} and \code{nsc}. Row indices represent predators and column indices represent prey. A value of 1 at location \code{i}, \code{j} indicates prey \code{j} is eaten by predator \code{i}.
+#' @param tau A matrix with dimensions \code{nfish} and \code{nfish}. Row indices represent predators and column indices represent prey. A value of 1 at location \code{i}, \code{j} indicates prey \code{j} is eaten by predator \code{i}.
 #' @param rec_fun A character vector representing the stock recruitment function to be applied to each species. The default value is \code{"hockey-stick"} but \code{rec_fun} can take a value of \code{"Ricker"}, \code{"Beverton-Holt"}, \code{"constant"}, or \code{"linear"} for each species.
 #' @param recruit_params A list object of length \code{nfish} specifying the parameters for the recruitment function.
 #' @param natmort_opt A character vector of length \code{1} describing the mortality function to be used for the species. The default value is \code{"std_RNM"} but can take a value of \code{"constant"} or \code{"linear"}. See \code{calc_M1} for more information.
@@ -315,8 +315,9 @@ setMethod('LeMansParam', signature(df="missing", gdf="missing"),
             if (pred_sigma <= 0) {
               stop("pred_sigma must take a positive value")
             }
-            if (class(tau) != "matrix") {
-              stop("tau must be a matrix of dimensions nfish and nfish")
+            #if (class(tau) != "matrix") {
+            if (is(tau,"matrix")==FALSE){
+             stop("tau must be a matrix of dimensions nfish and nfish")
             }
             #if (length(catch_species) < 0 | length(catch_species) > nfish) {
             #  stop("The length of catch_species is not equal to nfish")

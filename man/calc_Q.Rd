@@ -8,19 +8,27 @@
 \alias{knife_edge_catch}
 \title{Calculate gear catchability}
 \usage{
-calc_Q(curve = rep("logistic", nfish), species = ((0:(length(curve) -
-  1))\%\%nfish) + 1, max_catchability = rep(1, length(curve)),
-  gear_name = paste("gear_", 1:length(curve), sep = ""), custom = NULL,
-  nsc, nfish, l_bound, u_bound, mid, eps = 1e-05, species_names, ...)
+calc_Q(
+  curve = rep("logistic", nfish),
+  species = ((0:(length(curve) - 1))\%\%nfish) + 1,
+  max_catchability = rep(1, length(curve)),
+  gear_name = paste("gear_", 1:length(curve), sep = ""),
+  custom = NULL,
+  nsc,
+  nfish,
+  l_bound,
+  u_bound,
+  mid,
+  eps = 1e-05,
+  species_names,
+  ...
+)
 
-get_Q(curve, species, gear_name, nsc, nfish, l_bound, u_bound, mid, eps,
-  ...)
+get_Q(curve, species, gear_name, nsc, nfish, l_bound, u_bound, mid, eps, ...)
 
-logistic_catch(species, nsc, nfish, mid, eps, L50 = 50, eta = 0.25,
-  ...)
+logistic_catch(species, nsc, nfish, mid, eps, L50 = 50, eta = 0.25, ...)
 
-log_gaussian_catch(species, nsc, nfish, mid, eps, Lmu = 50, Lsigma = 1,
-  ...)
+log_gaussian_catch(species, nsc, nfish, mid, eps, Lmu = 50, Lsigma = 1, ...)
 
 knife_edge_catch(species, nsc, nfish, l_bound, u_bound, Lmin = 50, ...)
 }

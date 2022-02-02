@@ -148,7 +148,7 @@ function(N0, Fs, tot_time, nsc, nfish, phi_min, mature, sc_Linf, wgt, phi, ratio
     M2[,,ts] <- calc_M2(N[,,ts], ration, wgt, nfish, nsc, other, sc_Linf, suit_M2)
     Z <- Fs[,,ts-1]*phi_min+M1+M2[,,ts]+eps
     if (max(Fs[,,ts-1])>0) {
-      Catch[,,ts] <- (Fs[,,ts-1]/Z)*N[,,ts]*(1-exp(-Z))*wgt
+      Catch[,,ts] <- (Fs[,,ts-1]*phi_min/Z)*N[,,ts]*(1-exp(-Z))*wgt
     }
     N[,,ts] <- N[,,ts]*exp(-Z)
 

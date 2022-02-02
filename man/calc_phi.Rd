@@ -4,8 +4,16 @@
 \alias{calc_phi}
 \title{Calculate the proportion of individuals that leave each length class for each species each length class each time step.}
 \usage{
-calc_phi(k, Linf, nsc, nfish, u_bound, l_bound, calc_phi_min = FALSE,
-  phi_min = 0.1)
+calc_phi(
+  k,
+  Linf,
+  nsc,
+  nfish,
+  u_bound,
+  l_bound,
+  calc_phi_min = FALSE,
+  phi_min = 0.1
+)
 }
 \arguments{
 \item{k}{A numeric vector of length \code{nfish} representing the von Bertalanffy growth parameter \code{(1/yr)} for each species.}

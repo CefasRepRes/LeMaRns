@@ -74,7 +74,7 @@ calc_Q <- function(curve=rep("logistic", nfish), species=((0:(length(curve)-1))%
   dimnames(Qs)[[3]] <- unique(gear_name)
 
   for(i in 1:length(curve)){
-    Qs[,,gear_name[i]] <- tmp_Q[, i]*max_catchability[i]+Qs[,,gear_name[i]]
+    Qs[,,as.character(gear_name[i])] <- tmp_Q[, i]*max_catchability[i]+Qs[,,as.character(gear_name[i])]
   }
 
   Qs <- abind(Qs, custom)

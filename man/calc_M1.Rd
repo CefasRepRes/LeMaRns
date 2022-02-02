@@ -8,9 +8,14 @@
 \alias{calc_M1_constRNM}
 \title{Calculate background mortality}
 \usage{
-calc_M1(nsc, sc_Linf, phi_min, natmort_opt = rep("std_RNM",
-  length(sc_Linf)), Nmort = rep(0.8, length(sc_Linf)), prop = rep(0.75,
-  length(sc_Linf)))
+calc_M1(
+  nsc,
+  sc_Linf,
+  phi_min,
+  natmort_opt = rep("std_RNM", length(sc_Linf)),
+  Nmort = rep(0.8, length(sc_Linf)),
+  prop = rep(0.75, length(sc_Linf))
+)
 
 get_M1(nsc, sc_Linf, natmort_opt, Nmort, prop)
 
