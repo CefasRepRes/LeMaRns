@@ -330,6 +330,9 @@ setMethod('LeMansParam', signature(df="missing", gdf="missing"),
             if (any(Nmort <= 0)) {
               warning("Nmort must take a positive value")
             }
+            if (is.numeric(max_catchability)==FALSE) {
+              stop("max_catchability is not a numeric vector")
+            }
             if (any(max_catchability < 0)) {
               warning("max_catchability cannot take a negative value")
             }

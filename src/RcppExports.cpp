@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // calc_M2
 arma::mat calc_M2(arma::mat N, arma::mat ration, arma::mat wgt, double nfish, double nsc, double other, Rcpp::NumericVector sc_Linf, List suit_M2);
 RcppExport SEXP _LeMaRns_calc_M2(SEXP NSEXP, SEXP rationSEXP, SEXP wgtSEXP, SEXP nfishSEXP, SEXP nscSEXP, SEXP otherSEXP, SEXP sc_LinfSEXP, SEXP suit_M2SEXP) {
