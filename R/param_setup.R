@@ -264,7 +264,7 @@ setMethod("LeMansParam", signature(df="missing", gdf="ANY"),
             }}
 
             if ("max_catchability" %in% colnames(gdf)) {
-              max_catchability <- gdf$max_catchability
+              max_catchability <- as.numeric(gdf$max_catchability)
             }
             if ("gear_name" %in% colnames(gdf)) {
               gear_name <- gdf$gear_name
