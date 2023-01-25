@@ -4,7 +4,8 @@
 \name{NS_par}
 \alias{NS_par}
 \title{North Sea data}
-\format{A data frame with 21 rows and 8 variables, including:
+\format{
+A data frame with 21 rows and 8 variables, including:
 \describe{
 \item{\code{species_names}}{A numeric or character vector of length \code{nfish} that denotes the names of the species in the model.}
  \item{\code{Linf}}{A numeric vector of length \code{nfish} representing the asymptotic length of each species (cm).}
@@ -14,7 +15,8 @@
  \item{\code{Lmat}}{A numeric vector of length \code{nsc} representing the length at which 50\% of the individuals are mature (cm).}
  \item{\code{a}}{A numeric value representing the density independent part of the hockey-stick recruitment curve.}
  \item{\code{b}}{A numeric value representing the density dependent part of the hockey-stick recruitment curve.}
-}}
+}
+}
 \usage{
 NS_par
 }

@@ -4,7 +4,9 @@
 \name{NS_other}
 \alias{NS_other}
 \title{Other food for the North Sea}
-\format{A numerical value representing other food. To be used with \code{NS_par}.}
+\format{
+A numerical value representing other food. To be used with \code{NS_par}.
+}
 \usage{
 NS_other
 }

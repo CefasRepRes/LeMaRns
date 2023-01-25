@@ -4,10 +4,12 @@
 \name{NS_tau}
 \alias{NS_tau}
 \title{North Sea interaction matrix}
-\format{A matrix with 21 rows and 21 columns:
+\format{
+A matrix with 21 rows and 21 columns:
 \describe{
  Row indices represent predators and column indices represent prey. A value of 1 at location \code{i}, \code{j} indicates prey \code{j} is eaten by predator \code{i}.
-}}
+}
+}
 \usage{
 NS_tau
 }

@@ -151,7 +151,7 @@ LeMansParam(df, gdf, ...)
 
 \item{kappa}{A numeric vector of length \code{nfish} representing the rate of change from immature to mature fish.}
 
-\item{tau}{A matrix with dimensions \code{nfish} and \code{nsc}. Row indices represent predators and column indices represent prey. A value of 1 at location \code{i}, \code{j} indicates prey \code{j} is eaten by predator \code{i}.}
+\item{tau}{A matrix with dimensions \code{nfish} and \code{nfish}. Row indices represent predators and column indices represent prey. A value of 1 at location \code{i}, \code{j} indicates prey \code{j} is eaten by predator \code{i}.}
 
 \item{rec_fun}{A character vector representing the stock recruitment function to be applied to each species. The default value is \code{"hockey-stick"} but \code{rec_fun} can take a value of \code{"Ricker"}, \code{"Beverton-Holt"}, \code{"constant"}, or \code{"linear"} for each species.}
 

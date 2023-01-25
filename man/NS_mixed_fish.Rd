@@ -4,13 +4,15 @@
 \name{NS_mixed_fish}
 \alias{NS_mixed_fish}
 \title{Gear selectivity data frame}
-\format{A data frame with 21 rows and 4 variables, including:
+\format{
+A data frame with 21 rows and 4 variables, including:
 \describe{
 \item{\code{catch_species}}{A character string describing the species to apply the catchability curve to.}
  \item{\code{curve}}{A character vector describing the type of curve to be used to determine the catchability of each species by the fishing gear.}
  \item{\code{gear_name}}{A character string describing the name of the gear.}
  \item{\code{max_catchability}}{A numeric vector describing the maximum catchability for each catchability curve.}
-}}
+}
+}
 \usage{
 NS_mixed_fish
 }

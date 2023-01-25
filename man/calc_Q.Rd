@@ -112,7 +112,7 @@ Linf <- NS_par$Linf # the von-Bertalanffy asymptotic length of each species (cm)
 W_a <- NS_par$W_a # length-weight conversion parameter.
 W_b <- NS_par$W_b # length-weight conversion parameter.
 k <- NS_par$k # the von-Bertalnaffy growth parameter.
-Lmat <- NS_par$Lmat # the length at which 50\\\% of individuals are mature (cm).
+Lmat <- NS_par$Lmat # the length at which 50\\% of individuals are mature (cm).
 
 # Calculate gear catchability
 Qs <- calc_Q(curve=rep("logistic", nfish), species=NS_par$species_names,

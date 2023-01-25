@@ -45,3 +45,8 @@ Resubmission 2
 This is a resubmission. In this version I have:
 
 -   changed the Title field to be in title case. It now reads: Length-Based Multispecies Analysis by Numerical Simulation.
+
+Update Version: 0.1.3
+--------------
+
+We have changed the maintainer from michael.spence@cefas.co.uk to michael.spence@cefas.gov.uk due to the change of email address at Cefas.

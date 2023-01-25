@@ -4,7 +4,9 @@
 \name{NS_eta}
 \alias{NS_eta}
 \title{The steepness of the slope of the catchability curve}
-\format{A numeric value representing the steepness of the slope of the catchability curve.}
+\format{
+A numeric value representing the steepness of the slope of the catchability curve.
+}
 \usage{
 NS_eta
 }

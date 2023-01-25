@@ -16,7 +16,7 @@ calc_prefs(pred_mu, pred_sigma, wgt, sc_Linf)
 \item{sc_Linf}{A numeric vector of length \code{nsc} representing the length class at which each species reaches its asymptotic length.}
 }
 \value{
-An array of dimensions \code{nsc}, \code{nfish}, \code{nsc} and \code{nfish}. The first and second dimensions represent the prey species whereas the third and fourth dimensions represent the predator species.
+An array of dimensions \code{nsc}, \code{nfish}, \code{nsc} and \code{nfish}. The first and second dimensions represent the predators whereas the third and fourth dimensions represent the prey.
 }
 \description{
 Calculates the size preference of each predator species in each length class for each prey species in each length class.
@@ -40,7 +40,7 @@ Linf <- NS_par$Linf # the von-Bertalanffy asymptotic length of each species (cm)
 W_a <- NS_par$W_a # length-weight conversion parameter.
 W_b <- NS_par$W_b # length-weight conversion parameter.
 k <- NS_par$k # the von-Bertalnaffy growth parameter.
-Lmat <- NS_par$Lmat # the length at which 50\\\% of individuals are mature (cm).
+Lmat <- NS_par$Lmat # the length at which 50\\% of individuals are mature (cm).
 
 # Get phi_min
 tmp <- calc_phi(k, Linf, nsc, nfish, u_bound, l_bound, calc_phi_min=FALSE,

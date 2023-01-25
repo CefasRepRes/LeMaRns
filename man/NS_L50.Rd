@@ -4,7 +4,9 @@
 \name{NS_L50}
 \alias{NS_L50}
 \title{The length at 50\% of the maximum catchability of the catchability curve}
-\format{A numeric value representing the length at 50\% of the maximum catchability of the catchability curve.}
+\format{
+A numeric value representing the length at 50\% of the maximum catchability of the catchability curve.
+}
 \usage{
 NS_L50
 }

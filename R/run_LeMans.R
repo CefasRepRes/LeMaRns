@@ -286,19 +286,18 @@ get_N0 <- function(nsc, nfish, mid, wgt, sc_Linf, intercept=1e10, slope=-5) {
 #' out <- comb_LeMans_run(model_run1, model_run2, cont=TRUE)
 #' @export
 comb_LeMans_run <- function(LeMans_run_x, LeMans_run_y, cont=TRUE) {
-  if (class(LeMans_run_x)!=class(LeMans_run_y)|class(LeMans_run_x)!="LeMans_outputs") {
+  if (!inherits(LeMans_run_x,class(LeMans_run_y))|!inherits(LeMans_run_x,"LeMans_outputs")) {
     stop("LeMans_run_x and LeMans_run_y must be of class LeMans_outputs")
   }
   if (cont==T) {
-    N <- abind(LeMans_run_x@N, LeMans_run_y@N[,,-1])
-    Catch <- abind(LeMans_run_x@Catch, LeMans_run_y@Catch[,,-1])
-    M2 <- abind(LeMans_run_x@M2, LeMans_run_y@M2[,,-1])
-    R <- rbind(LeMans_run_x@R, LeMans_run_y@R[-1, ])
-  } else {
-    N <- abind(LeMans_run_x@N, LeMans_run_y@N)
-    Catch <- abind(LeMans_run_x@Catch, LeMans_run_y@Catch)
-    M2 <- abind(LeMans_run_x@M2, LeMans_run_y@M2)
-    R <- rbind(LeMans_run_x@R, LeMans_run_y@R)
+    LeMans_run_y@N <- LeMans_run_y@N[,,-1]
+    LeMans_run_y@Catch <- LeMans_run_y@Catch[,,-1]
+    LeMans_run_y@M2 <-LeMans_run_y@M2[,,-1]
+    LeMans_run_y@R <- LeMans_run_y@R[-1, ]
   }
+  N <- abind(LeMans_run_x@N, LeMans_run_y@N)
+  Catch <- abind(LeMans_run_x@Catch, LeMans_run_y@Catch)
+  M2 <- abind(LeMans_run_x@M2, LeMans_run_y@M2)
+  R <- rbind(LeMans_run_x@R, LeMans_run_y@R)
   return(new("LeMans_outputs", N=N, Catch=Catch, M2=M2, R=R))
 }
